@@ -10,7 +10,7 @@
                     购买数量：
                 </div>
                 <div class="sales-board-line-right">
-
+                    <v-counter></v-counter>
                 </div>
             </div>
             <div class="sales-board-line">
@@ -18,7 +18,7 @@
                     行业：
                 </div>
                 <div class="sales-board-line-right">
-
+                  <v-selection :selections="tradeList"></v-selection>
                 </div>
             </div>
             <div class="sales-board-line">
@@ -26,7 +26,7 @@
                     产品版本：
                 </div>
                 <div class="sales-board-line-right">
-
+                  <v-mul-chooser :selections="versionList"></v-mul-chooser>
                 </div>
             </div>
             <div class="sales-board-line">
@@ -34,7 +34,7 @@
                     有效时间：
                 </div>
                 <div class="sales-board-line-right">
-                    半年
+                    <v-chooser :selections="periodList"></v-chooser>
                 </div>
             </div>
             <div class="sales-board-line">
@@ -250,3 +250,77 @@
         </div>
     </div>
 </template>
+
+<script>
+import VCounter from '../../components/base/counter'
+import VMulChooser from '../../components/base/multiplyChooser'
+import VChooser from '../../components/base/chooser'
+import VSelection from '../../components/base/selection'
+
+export default {
+  components: {
+    VCounter,
+    VChooser,
+    VMulChooser,
+    VSelection
+  },
+  data () {
+    return {
+          versionList: [
+          {
+            label: '初级版',
+            value: 0
+          },
+          {
+            label: '中级版',
+            value: 1
+          },
+          {
+            label: '高级版',
+            value: 2
+          },
+          {
+            label: '专家版',
+            value: 3
+          }
+        ],
+      tradeList: [
+        {
+          label: '出版业',
+          value: 0
+        },
+        {
+          label: '媒体',
+          value: 1
+        },
+        {
+          label: '金融',
+          value: 2
+        },
+        {
+          label: '互联网',
+          value: 3
+        },
+        {
+          label: '游戏',
+          value: 4
+        }
+      ],
+      periodList: [
+        {
+          label: '半年',
+          value: 0
+        },
+        {
+          label: '一年',
+          value: 1
+        },
+        {
+          label: '三年',
+          value: 2
+        }
+      ],
+    }
+  }
+}
+</script>

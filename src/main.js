@@ -6,7 +6,7 @@ import Layout from './components/layout'
 import IndexPage from './pages/index'
 import VueRouter from 'vue-router'  //cnpm install vue-router --save
 import VueResource from 'vue-resource' //发送$get $post请求
-import DetailPage from './pages/Detail'
+import DetailPage from './pages/detail'
 import DetailAnaPage from './pages/detail/analysis'
 import DetailCouPage from './pages/detail/count'
 import DetailForPage from './pages/detail/forecast'

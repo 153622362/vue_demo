@@ -10,7 +10,7 @@
                     购买数量：
                 </div>
                 <div class="sales-board-line-right">
-
+                    <v-counter></v-counter>
                 </div>
             </div>
             <div class="sales-board-line">
@@ -18,7 +18,7 @@
                     媒介：
                 </div>
                 <div class="sales-board-line-right">
-
+                    <v-chooser :selections="versionList"></v-chooser>
                 </div>
             </div>
             <div class="sales-board-line">
@@ -26,7 +26,7 @@
                     有效时间：
                 </div>
                 <div class="sales-board-line-right">
-                    一年
+                    <v-chooser :selections="periodList"></v-chooser>
                 </div>
             </div>
             <div class="sales-board-line">
@@ -56,3 +56,51 @@
         </div>
     </div>
 </template>
+
+<script>
+import VCounter from '../../components/base/counter'
+import VChooser from '../../components/base/chooser'
+export default {
+  components : {
+    VCounter,
+    VChooser
+  },
+  data () {
+    return {
+      versionList: [
+        {
+          label: '纸质报告',
+          value: 0
+        },
+        {
+          label: 'pdf',
+          value: 1
+        },
+        {
+          label: '页面报告',
+          value: 2
+        },
+        {
+          label: '邮件',
+          value: 3
+        }
+      ],
+      periodList : [
+        {
+          label : '半年',
+          value : 0
+        },
+        {
+          label : '一年',
+          value : 1
+        },
+        {
+          label : '三年',
+          value : 2
+        }
+      ]
+    }
+  }
+
+}
+</script>

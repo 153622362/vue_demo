@@ -12,7 +12,8 @@
         </div>
         <div class="detail-right">
             <keep-alive> <!--缓存-->
-                <router-view></router-view> <!--子视图-->
+                <router-view></router-view
+                > <!--子视图-->
             </keep-alive>
         </div>
     </div>

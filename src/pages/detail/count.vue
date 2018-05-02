@@ -10,7 +10,7 @@
                     产品类型：
                 </div>
                 <div class="sales-board-line-right">
-
+                    <v-chooser :selections="buyTypes"></v-chooser>
                 </div>
             </div>
             <div class="sales-board-line">
@@ -18,7 +18,7 @@
                     适用地区：
                 </div>
                 <div class="sales-board-line-right">
-
+                    <v-chooser :selections="districts"></v-chooser>
                 </div>
             </div>
             <div class="sales-board-line">
@@ -26,7 +26,7 @@
                     有效时间：
                 </div>
                 <div class="sales-board-line-right">
-                    半年
+                    <v-chooser :selections="periodList"></v-chooser>
                 </div>
             </div>
             <div class="sales-board-line">
@@ -242,3 +242,73 @@
         </div>
     </div>
 </template>
+
+<script>
+import VChooser from '../../components/base/chooser'
+
+  export default {
+  components:{
+    VChooser
+  },
+  data () {
+    return {
+    periodList : [
+      {
+        label: '半年',
+        value: 0
+      },
+      {
+        label: '一年',
+        value: 1
+      },
+      {
+        label: '三年',
+        value: 2
+      }
+    ],
+      buyTypes: [
+        {
+          label: '红色版',
+          value: 0
+        },
+        {
+          label: '绿色版',
+          value: 1
+        },
+        {
+          label: '紫色版',
+          value: 2
+        }
+      ],
+      districts: [
+        {
+          label: '北京',
+          value: 0
+        },
+        {
+          label: '上海',
+          value: 1
+        },
+        {
+          label: '广州',
+          value: 2
+        },
+        {
+          label: '天津',
+          value: 3
+        },
+        {
+          label: '武汉',
+          value: 4
+        },
+        {
+          label: '重庆',
+          value: 5
+        },
+      ]
+    }
+  },
+}
+
+
+</script>
