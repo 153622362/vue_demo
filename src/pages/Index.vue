@@ -3,7 +3,6 @@
         <div class="index-left">
             <div class="index-left-block">
                 <h2>全部产品</h2>
-
                 <template v-for="product in productList">
                     <h3>{{ product.title}}</h3>
                     <ul>
@@ -41,14 +40,18 @@
                 </div>
             </div>
         </div>
+      <message></message>
     </div>
 </template>
 
 <script>
 import slideShow from '../components/slideShow'
+import message from '../components/base/message'
+
 export default {
         components: { //组件 在视图中slide-show标签
-          slideShow
+          slideShow,
+          message,
         },
         created : function(){
             this.$http.get('api/getNewsList')
@@ -59,13 +62,14 @@ export default {
                 })
         },
         methods:{
-          doSomething()
+          doSomething(index)
           {
-              // console.log('do something message!')
+              // console.log(index)
           }
         },
         data () {
             return {
+                input:'',
                 invTime: 2000,
                 slides: [
                     {

@@ -189,6 +189,7 @@ export default {
     methods: {
         onParamChange (attr, val) {
             this[attr] = val
+          console.log(attr)
             this.getPrice()
         },
         getPrice () { //从后端获取价格
