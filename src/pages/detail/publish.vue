@@ -42,13 +42,13 @@
                     总价：
                 </div>
                 <div class="sales-board-line-right">
-                    500 元
+                    {{ price }} 元
                 </div>
             </div>
             <div class="sales-board-line">
                 <div class="sales-board-line-left">&nbsp;</div>
                 <div class="sales-board-line-right">
-                    <div class="button">
+                    <div class="button" @click="showPayDialog">
                         立即购买
                     </div>
                 </div>
@@ -248,6 +248,33 @@
                 </tbody>
             </table>
         </div>
+        <my-dialog :is-show="isShowPayDialog" @on-close="hidePayDialog">
+            <table class="buy-dialog-table">
+                <tr>
+                    <th>购买数量</th>
+                    <th>行业</th>
+                    <th>产品版本</th>
+                    <th>有效时间</th>
+                    <th>总价</th>
+                </tr>
+                <tr>
+                    <td>{{ buyNum }}</td>
+                    <td>{{ buyTrade.label }}</td>
+                    <td>{{ buyType.label }}</td>
+                    <td>{{ period.label }}</td>
+                    <td>{{ price }}</td>
+                </tr>
+            </table>
+            <h3 class="buy-dialog-title">请选择银行</h3>
+            <bank-chooser @on-change="onChangeBanks($event)"></bank-chooser>
+            <div class="button buy-dialog-btn" @click="confirmBuy">
+                确认购买
+            </div>
+        </my-dialog>
+        <my-dialog :is-show="isShowErrDialog" @on-close="hideErrDialog">
+            支付失败！
+        </my-dialog>
+        <check-order :is-show-check-dialog="isShowCheckOrder" :order-id="orderId" @on-close-check-dialog="hideCheckOrder"></check-order>
     </div>
 </template>
 
@@ -256,16 +283,32 @@ import VCounter from '../../components/base/counter'
 import VMulChooser from '../../components/base/multiplyChooser'
 import VChooser from '../../components/base/chooser'
 import VSelection from '../../components/base/selection'
+import Dialog from '../../components/base/dialog'
+import BankChooser from '../../components/bankChooser'
+import CheckOrder from '../../components/checkOrder'
 
 export default {
   components: {
     VCounter,
     VChooser,
     VMulChooser,
-    VSelection
+    VSelection,
+    MyDialog : Dialog,
+    BankChooser,
+    CheckOrder
   },
   data () {
     return {
+        isShowPayDialog : false,
+        isShowErrDialog : false,
+        isShowCheckOrder : false,
+        orderId : null,
+        bankId  : null,
+        buyNum : 1,
+        buyTrade : {},
+        buyType : {},
+        period : {},
+        price : 0,
           versionList: [
           {
             label: '初级版',
@@ -321,6 +364,58 @@ export default {
         }
       ],
     }
+  },
+  methods : {
+      showPayDialog () {
+          this.isShowPayDialog = true
+      },
+      hidePayDialog () {
+          this.isShowPayDialog = false
+      },
+      onChangeBanks (val) {
+           this.bankId = val.id
+      },
+      hideErrDialog () {
+            this.isShowErrDialog = false
+      },
+      hideCheckOrder () {
+            this.isShowCheckOrder = false
+      },
+      confirmBuy () {
+
+      }
+
+  },
+  mounted () {
+      this.buyNum = 1
+      this.buyTrade = this.tradeList[0]
+      this.buyType = this.versionList[0]
+      this.period = this.periodList[0]
+
   }
 }
 </script>
+<style scoped>
+    .buy-dialog-title {
+        font-size: 16px;
+        font-weight: bold;
+    }
+    .buy-dialog-btn {
+        margin-top: 20px;
+    }
+    .buy-dialog-table {
+        width: 100%;
+        margin-bottom: 20px;
+    }
+    .buy-dialog-table td,
+    .buy-dialog-table th{
+        border: 1px solid #e3e3e3;
+        text-align: center;
+        padding: 5px 0;
+    }
+    .buy-dialog-table th {
+        background: #4fc08d;
+        color: #fff;
+        border: 1px solid #4fc08d;
+    }
+</style>

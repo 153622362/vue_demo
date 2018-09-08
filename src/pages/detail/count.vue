@@ -10,7 +10,7 @@
                     产品类型：
                 </div>
                 <div class="sales-board-line-right">
-                    <v-chooser :selections="buyTypes"></v-chooser>
+                    <v-chooser :selections="buyTypes" @on-change="onParamChange('buyType', $event)"></v-chooser>
                 </div>
             </div>
             <div class="sales-board-line">
@@ -18,7 +18,7 @@
                     适用地区：
                 </div>
                 <div class="sales-board-line-right">
-                    <v-chooser :selections="districts"></v-chooser>
+                    <v-chooser :selections="districts" @on-change="onParamChange('district', $event)"></v-chooser>
                 </div>
             </div>
             <div class="sales-board-line">
@@ -26,7 +26,7 @@
                     有效时间：
                 </div>
                 <div class="sales-board-line-right">
-                    <v-chooser :selections="periodList"></v-chooser>
+                    <v-chooser :selections="periodList" @on-change="onParamChange('period', $event)" ></v-chooser>
                 </div>
             </div>
             <div class="sales-board-line">
@@ -34,13 +34,13 @@
                     总价：
                 </div>
                 <div class="sales-board-line-right">
-                    500 元
+                    {{ price }} 元
                 </div>
             </div>
             <div class="sales-board-line">
                 <div class="sales-board-line-left">&nbsp;</div>
                 <div class="sales-board-line-right">
-                    <div class="button">
+                    <div class="button" @click="showPayDialog">
                         立即购买
                     </div>
                 </div>
@@ -240,18 +240,59 @@
                 </tbody>
             </table>
         </div>
+        <my-dialog :is-show="isShowPayDialog" @on-close="hidePayDialog">
+            <table class="buy-dialog-table">
+                <tr>
+                    <th>产品类型</th>
+                    <th>适用地区</th>
+                    <th>有效期</th>
+                    <th>总价</th>
+                </tr>
+                <tr>
+                    <td>{{ buyType.label }}</td>
+                    <td>{{ district.label }}</td>
+                    <td>{{ period.label }}</td>
+                    <td>{{ price }}</td>
+                </tr>
+            </table>
+            <h3 class="buy-dialog-title">请选择银行</h3>
+            <bank-chooser @on-change="onChangeBanks"></bank-chooser>
+            <div class="button buy-dialog-btn" @click="confirmBuy">
+                确认购买
+            </div>
+        </my-dialog>
+        <my-dialog :is-show="isShowErrDialog" @on-close="hideErrDialog">
+            支付失败！
+        </my-dialog>
+        <check-order :is-show-check-dialog="isShowCheckOrder" :order-id="orderId" @on-close-check-dialog="hideCheckOrder"></check-order>
     </div>
 </template>
 
 <script>
 import VChooser from '../../components/base/chooser'
+import Dialog from '../../components/base/dialog'
+import BankChooser from '../../components/bankChooser'
+import CheckOrder from '../../components/checkOrder'
+
 
   export default {
   components:{
-    VChooser
+    VChooser,
+    MyDialog : Dialog,
+    BankChooser,
+    CheckOrder
   },
   data () {
     return {
+    isShowPayDialog : false,
+    isShowErrDialog : false,
+    isShowCheckOrder : false,
+    orderId : null,
+    bankId : null,
+    buyType : {},
+    period : {},
+    district : {},
+    price : 0,
     periodList : [
       {
         label: '半年',
@@ -308,7 +349,74 @@ import VChooser from '../../components/base/chooser'
       ]
     }
   },
+  methods : {
+      onParamChange (attr,val) {
+              this[attr] = val
+      },
+      hidePayDialog(){
+          this.isShowPayDialog = false
+      },
+      showPayDialog () {
+          this.isShowPayDialog = true
+      },
+      hideErrDialog () {
+          this.isShowErrDialog = false
+      },
+      hideCheckOrder () {
+          this.isShowCheckOrder = false
+      },
+      onChangeBanks (bankObj) {
+          this.bankId = bankObj.id
+      },
+      confirmBuy () {
+          let reqParams = {
+              buyType: this.buyType.value,
+              district: this.district.value,
+              period: this.period.value,
+              bankId: this.bankId
+          }
+          this.$http.post('/api/createOrder', reqParams)
+              .then((res) => {
+                  this.orderId = res.data.orderId
+                  this.isShowCheckOrder = true
+                  this.isShowPayDialog = false
+              }, (err) => {
+                  this.isShowBuyDialog = false
+                  this.isShowErrDialog = true
+              })
+      }
+  },
+  mounted () { //初始化
+          this.buyType = this.buyTypes[0]
+          this.district = this.districts[0]
+          this.period = this.periodList[0]
+          // this.getPrice()
+      }
 }
 
 
 </script>
+<style scoped>
+    .buy-dialog-title {
+        font-size: 16px;
+        font-weight: bold;
+    }
+    .buy-dialog-btn {
+        margin-top: 20px;
+    }
+    .buy-dialog-table {
+        width: 100%;
+        margin-bottom: 20px;
+    }
+    .buy-dialog-table td,
+    .buy-dialog-table th{
+        border: 1px solid #e3e3e3;
+        text-align: center;
+        padding: 5px 0;
+    }
+    .buy-dialog-table th {
+        background: #4fc08d;
+        color: #fff;
+        border: 1px solid #4fc08d;
+    }
+</style>
