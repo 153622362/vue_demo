@@ -10,6 +10,7 @@
                     产品类型：
                 </div>
                 <div class="sales-board-line-right">
+                  <!--绑定组件里的on-change方法-->
                     <v-chooser :selections="buyTypes" @on-change="onParamChange('buyType', $event)"></v-chooser>
                 </div>
             </div>

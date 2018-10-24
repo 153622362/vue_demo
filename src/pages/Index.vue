@@ -7,6 +7,8 @@
                     <h3>{{ product.title}}</h3>
                     <ul>
                         <li v-for="item in product.list">
+                          <!-- 完整语法 -->
+                          <!--<a v-bind:href="url">...</a>-->
                             <a :href="item.url">{{ item.name }}</a>
                             <span v-if="item.hot" class="hot-tag">HOT</span>
                         </li>
@@ -24,9 +26,11 @@
             </div>
         </div>
         <div class="index-right">
+
             <slide-show :slides="slides" :inv="invTime" @onchange="doSomething"></slide-show>
             <div class="index-board-list">
-                <div
+              <!--:class绑定css-->
+              <div
                         class="index-board-item"
                         v-for="(item, index) in boardList"
                         :class="[{'line-last' : index % 2 !== 0}, 'index-board-' + item.id]">
@@ -53,7 +57,7 @@ export default {
           slideShow,
           message,
         },
-        created : function(){
+        created : function(){ //生命周期-在实例创建之后被调用
             this.$http.get('api/getNewsList')
                 .then((res) => {
                     this.newsList = res.data
@@ -61,17 +65,17 @@ export default {
                     console.log(err)
                 })
         },
-        methods:{
+        methods:{ //方法
           doSomething(index)
           {
               // console.log(index)
           }
         },
-        data () {
+        data () { //数据
             return {
                 input:'',
                 invTime: 2000,
-                slides: [
+                slides: [ //多维json
                     {
                         src: require('../assets/slideShow/pic1.jpg'),
                         title: 'xxx1',
@@ -153,20 +157,20 @@ export default {
                         list: [
                             {
                                 name: '91助手',
-                                url: ''
+                                url: 'detail/forecast'
                             },
                             {
                                 name: '产品助手',
-                                url: '',
+                                url: 'detail/analysis',
                                 hot: true
                             },
                             {
                                 name: '智能地图',
-                                url: ''
+                                url: '/detail/publish'
                             },
                             {
                                 name: '团队语音',
-                                url: ''
+                                url: '/detail/publish'
                             }
                         ]
                     }
@@ -175,7 +179,7 @@ export default {
         }
     }
 </script>
-
+<!--样式私有化-->
 <style scoped>
     .index-wrap {
         width: 1200px;

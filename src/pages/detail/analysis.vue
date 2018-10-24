@@ -10,6 +10,7 @@
                     购买数量：
                 </div>
                 <div class="sales-board-line-right">
+                  <!--buyNum是组件里的参数-->
                     <v-counter @on-change="onParamChange('buyNum', $event)"></v-counter>
                 </div>
             </div>
@@ -18,6 +19,7 @@
                     产品类型：
                 </div>
                 <div class="sales-board-line-right">
+                  <!--组件参数selections绑定到buyTypes-->
                     <v-selection :selections="buyTypes" ></v-selection>
                 </div>
             </div>
@@ -188,13 +190,12 @@ export default {
     },
     methods: {
         onParamChange (attr, val) {
-            this[attr] = val
-          console.log(attr)
+            this[attr] = [val]
             this.getPrice()
         },
         getPrice () { //从后端获取价格
             let buyVersionsArray = _.map(this.versions, (item) => {
-                return item
+              return item
             })
 
             let reqParams = {
@@ -203,9 +204,10 @@ export default {
                 period: this.period.value,
                 version: buyVersionsArray.join(',')
             }
-            this.$http.post('/api/getPrice', reqParams) //vue-resource 获取后端数据
+
+            this.$http.get('/api/getPrice/4', reqParams) //vue-resource 获取后端数据 json-server模拟后端数据
                 .then((res) => {
-                    this.price = res.data.amount
+                    this.price = 123
                 })
         },
       showPayDialog () {
@@ -224,7 +226,7 @@ export default {
         this.bankId = bankObj.id
       },
       confirmBuy () {
-        let buyVersionsArray = _.map(this.versions, (item) => {
+        let buyVersionsArray = _.map(this.versions, (item) => { //迭代返回versions 的value
           return item.value
         })
         let reqParams = {
@@ -234,7 +236,7 @@ export default {
           version: buyVersionsArray.join(','),
           bankId: this.bankId
         }
-        this.$http.post('/api/createOrder', reqParams)
+        this.$http.get('/api/createOrder/1', reqParams)
           .then((res) => {
           this.orderId = res.data.orderId
         this.isShowCheckOrder = true

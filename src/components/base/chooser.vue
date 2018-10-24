@@ -37,6 +37,7 @@ export default {
 }
 </script>
 
+<!--scoped样式私有化-->
 <style scoped>
 .chooser-component {
   position: relative;
